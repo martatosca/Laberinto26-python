@@ -12,6 +12,13 @@ from JuegoBomba import JuegoBomba
 from Decorator import Decorator
 from Bomba import Bomba
 from Hechizo import Hechizo
+# Strategy imports
+from Bicho import Bicho
+from Modo import Modo
+from Agresivo import Agresivo
+from Perezoso import Perezoso
+from Orientacion import Orientacion
+from Orientaciones import Norte, Sur, Este, Oeste
 
 def crear_laberinto_simple():
     """
@@ -235,6 +242,45 @@ def probar_decorator():
     print(f"   Segunda entrada:")
     bomba.entrar()
 
+def probar_strategy():
+    """
+    Prueba el patrón Strategy con Bicho/Modo y Orientaciones.
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN STRATEGY")
+    print("=" * 50)
+    
+    # --- Strategy con Bicho y Modo ---
+    print("\n-- 1. Crear bicho con modo Agresivo (por defecto):")
+    bicho = Bicho("Goblin")
+    print(f"   {bicho}")
+    bicho.actuar()
+    
+    print("\n-- 2. Cambiar modo a Perezoso en tiempo de ejecución:")
+    bicho.modo = Perezoso()
+    bicho.actuar()
+    
+    print("\n-- 3. Crear bicho directamente con modo Perezoso:")
+    bicho2 = Bicho("Troll", Perezoso())
+    print(f"   {bicho2}")
+    bicho2.actuar()
+    
+    print("\n-- 4. Cambiar el troll a modo Agresivo:")
+    bicho2.modo = Agresivo()
+    bicho2.actuar()
+    
+    # --- Strategy con Orientaciones ---
+    print("\n-- 5. Probar Orientaciones:")
+    norte = Norte()
+    sur = Sur()
+    este = Este()
+    oeste = Oeste()
+    
+    print(f"   Norte: {norte}, opuesta: {norte.obtener_opuesta()}")
+    print(f"   Sur: {sur}, opuesta: {sur.obtener_opuesta()}")
+    print(f"   Este: {este}, opuesta: {este.obtener_opuesta()}")
+    print(f"   Oeste: {oeste}, opuesta: {oeste.obtener_opuesta()}")
+
 def main():
     """
     Función principal que ejecuta todas las pruebas.
@@ -269,6 +315,9 @@ def main():
     
     # 9. Probar patrón Decorator
     probar_decorator()
+    
+    # 10. Probar patrón Strategy
+    probar_strategy()
     
     print("\n" + "#" * 60)
     print("#" + " " * 12 + "TODAS LAS PRUEBAS COMPLETADAS" + " " * 12 + "#")
