@@ -1,0 +1,25 @@
+from Decorator import Decorator
+from ElementoMapa import ElementoMapa
+
+class Bomba(Decorator):
+    """
+    Decorador concreto que añade comportamiento de bomba a cualquier ElementoMapa.
+    Cuando se entra, explota y luego delega al componente envuelto.
+    """
+    
+    def __init__(self, componente: ElementoMapa, activa: bool = True):
+        super().__init__(componente)
+        self.activa = activa
+    
+    def entrar(self):
+        """Explota si está activa, luego delega al componente"""
+        if self.activa:
+            print("💥 BOOM! La bomba explota.")
+            self.activa = False  # La bomba se desactiva tras explotar
+        else:
+            print("La bomba ya ha explotado.")
+        super().entrar()
+    
+    def __str__(self):
+        estado = "activa" if self.activa else "explotada"
+        return f"Bomba[{estado}]({self._componente})"
