@@ -8,15 +8,19 @@ class Juego:
     def __init__(self):
         super().__init__()
         self.laberinto=None
+        self._contador_habitaciones = 0  # Contador para generar IDs únicos
         
     def fabricarPared(self):
         return Pared()
     
-    def fabricarPuerta(self):
-        return Puerta()
+    def fabricarPuerta(self, lado1=None, lado2=None):
+        return Puerta(lado1, lado2)
     
-    def fabricarHabitacion(self):
-        return Habitacion()
+    def fabricarHabitacion(self, id_habitacion=None):
+        if id_habitacion is None:
+            self._contador_habitaciones += 1
+            id_habitacion = self._contador_habitaciones
+        return Habitacion(id_habitacion)
     
     def fabricarLaberinto(self):
         return Laberinto()
@@ -43,8 +47,8 @@ class Juego:
         hab2.oeste=self.fabricarPared()
         
         self.laberinto=self.fabricarLaberinto()
-        self.laberinto.agregarHabitacion(hab1)
-        self.laberinto.agregarHabitacion(hab2)
+        self.laberinto.agregar_Habitacion(hab1)
+        self.laberinto.agregar_Habitacion(hab2)
         
         return self.laberinto
     

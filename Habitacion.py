@@ -9,6 +9,27 @@ class Habitacion(Contenedor):
         self.sur = None
         self.este = None
         self.oeste = None
+        
+    """De esta forma evitamos duplicados: En Habitacion se sincronizan los 
+    atributos norte/sur/este/oeste con la lista hijos del Composite para que el recorrido del Iterator sea coherente y no aparezcan elementos duplicados al reemplazar un lado."""
+    def reemplazar_lado(self, attr_name, nuevo):
+        anterior = getattr(self, attr_name)
+        # Si estamos poniendo el mismo objeto, no hacemos nada
+        if anterior is nuevo:
+            return
+        # Si había un elemento anterior en ese lado, lo quitamos del composite
+        if anterior is not None:
+            try:
+                self.eliminar_hijo(anterior)
+            except ValueError:
+                # por si no estaba en la lista por cualquier motivo
+                pass
+        # Asignamos el nuevo
+        setattr(self, attr_name, nuevo)
+        # Si el nuevo no es None, lo añadimos como hijo si no estaba ya
+        if nuevo is not None:
+            if nuevo not in self.hijos:   # self.hijos existe en Contenedor
+                self.agregar_hijo(nuevo)
 
     def setNorte(self, elemento):
         self.norte = elemento

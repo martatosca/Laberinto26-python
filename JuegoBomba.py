@@ -1,4 +1,4 @@
-from Juego import Juego
+from Juego_arreglar import Juego
 from ParedBomba import ParedBomba
 
 class JuegoBomba(Juego):
