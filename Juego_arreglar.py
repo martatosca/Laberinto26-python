@@ -9,6 +9,7 @@ class Juego:
         super().__init__()
         self.laberinto=None
         self._contador_habitaciones = 0  # Contador para generar IDs únicos
+        self.bichos = []  # Lista de bichos del juego (0..*)
         
     def fabricarPared(self):
         return Pared()
@@ -51,6 +52,19 @@ class Juego:
         self.laberinto.agregar_Habitacion(hab2)
         
         return self.laberinto
+    
+    def agregarBicho(self, bicho):
+        """Añade un bicho al juego"""
+        self.bichos.append(bicho)
+    
+    def eliminarBicho(self, bicho):
+        """Elimina un bicho del juego"""
+        if bicho in self.bichos:
+            self.bichos.remove(bicho)
+    
+    def obtenerBichos(self):
+        """Devuelve la lista de bichos"""
+        return list(self.bichos)
     
     #product= ElementoMapa
     #concreteProduct= Habitacion, Pared, Puerta

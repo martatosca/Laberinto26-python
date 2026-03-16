@@ -269,8 +269,29 @@ def probar_strategy():
     bicho2.modo = Agresivo()
     bicho2.actuar()
     
+    # --- Probar nuevos métodos del diagrama ---
+    print("\n-- 5. Probar métodos caminar, atacar, dormir:")
+    print("   Goblin (Perezoso):")
+    bicho.caminar()
+    bicho.atacar()
+    bicho.dormir()
+    
+    print("\n   Troll (Agresivo):")
+    bicho2.caminar()
+    bicho2.atacar()
+    bicho2.dormir()
+    
+    # --- Probar vidas y poder ---
+    print("\n-- 6. Probar vidas y poder:")
+    bicho3 = Bicho("Orco", Agresivo(), vidas=5, poder=15)
+    print(f"   {bicho3}")
+    bicho3.recibir_dano(2)
+    print(f"   ¿Está vivo? {bicho3.esta_vivo()}")
+    bicho3.recibir_dano(5)
+    print(f"   ¿Está vivo? {bicho3.esta_vivo()}")
+    
     # --- Strategy con Orientaciones ---
-    print("\n-- 5. Probar Orientaciones:")
+    print("\n-- 7. Probar Orientaciones:")
     norte = Norte()
     sur = Sur()
     este = Este()
@@ -280,6 +301,21 @@ def probar_strategy():
     print(f"   Sur: {sur}, opuesta: {sur.obtener_opuesta()}")
     print(f"   Este: {este}, opuesta: {este.obtener_opuesta()}")
     print(f"   Oeste: {oeste}, opuesta: {oeste.obtener_opuesta()}")
+    
+    # --- Probar bichos en Juego ---
+    print("\n-- 8. Probar lista de bichos en Juego:")
+    juego = Juego()
+    juego.fabricarLab2HabFM()
+    
+    goblin = Bicho("Goblin", Agresivo())
+    troll = Bicho("Troll", Perezoso(), vidas=5, poder=20)
+    
+    juego.agregarBicho(goblin)
+    juego.agregarBicho(troll)
+    
+    print(f"   Bichos en el juego: {len(juego.obtenerBichos())}")
+    for b in juego.obtenerBichos():
+        print(f"     - {b}")
 
 def main():
     """

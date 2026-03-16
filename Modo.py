@@ -12,6 +12,21 @@ class Modo(ABC):
         pass
     
     @abstractmethod
+    def caminar(self, bicho) -> str:
+        """Define cómo camina el bicho según este modo"""
+        pass
+    
+    @abstractmethod
+    def atacar(self, bicho) -> str:
+        """Define cómo ataca el bicho según este modo"""
+        pass
+    
+    @abstractmethod
+    def dormir(self, bicho) -> str:
+        """Define cómo duerme el bicho según este modo"""
+        pass
+    
+    @abstractmethod
     def obtener_nombre(self) -> str:
         """Devuelve el nombre del modo"""
         pass

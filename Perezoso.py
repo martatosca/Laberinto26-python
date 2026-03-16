@@ -11,5 +11,20 @@ class Perezoso(Modo):
         print(mensaje)
         return mensaje
     
+    def caminar(self, bicho) -> str:
+        mensaje = f"{bicho.nombre} camina muy lentamente, arrastrando los pies"
+        print(mensaje)
+        return mensaje
+    
+    def atacar(self, bicho) -> str:
+        mensaje = f"{bicho.nombre} ataca sin ganas... Daño: {bicho.poder // 2}"
+        print(mensaje)
+        return mensaje
+    
+    def dormir(self, bicho) -> str:
+        mensaje = f"{bicho.nombre} duerme profundamente, roncando"
+        print(mensaje)
+        return mensaje
+    
     def obtener_nombre(self) -> str:
         return "Perezoso"
