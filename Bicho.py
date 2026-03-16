@@ -3,7 +3,7 @@ from Agresivo import Agresivo
 
 class Bicho:
     """
-    Context del patrón Strategy para Modo.
+    Context del patrón Strategy/Template Method para Modo.
     Representa una criatura del laberinto con un modo de comportamiento intercambiable.
     """
     
@@ -24,21 +24,21 @@ class Bicho:
         print(f"{self.nombre} cambia de modo {self._modo} a {nuevo_modo}")
         self._modo = nuevo_modo
     
-    def actuar(self):
-        """Delega la acción al Strategy actual"""
-        return self._modo.actuar(self)
+    def actua(self):
+        """Delega al TEMPLATE METHOD del modo - ejecuta la secuencia completa"""
+        return self._modo.actua(self)
     
     def caminar(self):
-        """Delega el caminar al Strategy actual"""
+        """Delega el caminar al modo actual"""
         return self._modo.caminar(self)
     
     def atacar(self):
-        """Delega el atacar al Strategy actual"""
+        """Delega el atacar al modo actual"""
         return self._modo.atacar(self)
     
-    def dormir(self):
-        """Delega el dormir al Strategy actual"""
-        return self._modo.dormir(self)
+    def duerme(self):
+        """Delega el duerme al modo actual"""
+        return self._modo.duerme(self)
     
     def entrar_habitacion(self, habitacion):
         """El bicho entra en una habitación"""

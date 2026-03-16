@@ -2,27 +2,27 @@ from Modo import Modo
 
 class Perezoso(Modo):
     """
-    ConcreteStrategy: Modo perezoso.
-    El bicho se mueve lentamente y no ataca.
+    ConcreteClass del patrón Template Method.
+    Modo perezoso: especializado en DORMIR.
+    Redefine duerme() con comportamiento potenciado.
     """
     
-    def actuar(self, bicho) -> str:
-        mensaje = f"{bicho.nombre} está en modo PEREZOSO: Se mueve lentamente..."
+    # ==================== OPERACIONES PRIMITIVAS ====================
+    def atacar(self, bicho) -> str:
+        """Operación primitiva básica: ataca sin ganas"""
+        mensaje = f"  -> {bicho.nombre} ataca sin ganas... Daño: {bicho.poder // 2}"
         print(mensaje)
         return mensaje
     
+    def duerme(self, bicho) -> str:
+        """Operación primitiva ESPECIALIZADA: El perezoso duerme profundamente"""
+        mensaje = f"  -> {bicho.nombre} ¡DUERME PROFUNDAMENTE! Ronquidos ensordecedores..."
+        print(mensaje)
+        return mensaje
+    
+    # ==================== OTROS MÉTODOS ====================
     def caminar(self, bicho) -> str:
         mensaje = f"{bicho.nombre} camina muy lentamente, arrastrando los pies"
-        print(mensaje)
-        return mensaje
-    
-    def atacar(self, bicho) -> str:
-        mensaje = f"{bicho.nombre} ataca sin ganas... Daño: {bicho.poder // 2}"
-        print(mensaje)
-        return mensaje
-    
-    def dormir(self, bicho) -> str:
-        mensaje = f"{bicho.nombre} duerme profundamente, roncando"
         print(mensaje)
         return mensaje
     

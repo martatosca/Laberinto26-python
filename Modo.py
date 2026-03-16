@@ -2,28 +2,39 @@ from abc import ABC, abstractmethod
 
 class Modo(ABC):
     """
-    Strategy abstracto para los modos de comportamiento de un Bicho.
-    Define la interfaz común para todos los modos.
+    AbstractClass del patrón Template Method + Strategy.
+    Define el esqueleto del algoritmo en actua() y delega pasos a las subclases.
     """
     
+    # ==================== TEMPLATE METHOD ====================
+    def actua(self, bicho) -> str:
+        """
+        TEMPLATE METHOD: Define el esqueleto del algoritmo.
+        Llama a las operaciones primitivas en orden definido.
+        Las subclases NO deben sobrescribir este método.
+        """
+        print(f"\n[{bicho.nombre}] ejecutando secuencia de acciones ({self.obtener_nombre()})...")
+        resultados = []
+        resultados.append(self.atacar(bicho))   # Paso 1: Atacar
+        resultados.append(self.duerme(bicho))   # Paso 2: Dormir
+        print(f"[{bicho.nombre}] secuencia completada.")
+        return "\n".join(resultados)
+    
+    # ==================== OPERACIONES PRIMITIVAS ====================
     @abstractmethod
-    def actuar(self, bicho) -> str:
-        """Define cómo actúa el bicho según este modo"""
+    def atacar(self, bicho) -> str:
+        """Operación primitiva: Define cómo ataca el bicho según este modo"""
         pass
     
+    @abstractmethod
+    def duerme(self, bicho) -> str:
+        """Operación primitiva: Define cómo duerme el bicho según este modo"""
+        pass
+    
+    # ==================== OTROS MÉTODOS ====================
     @abstractmethod
     def caminar(self, bicho) -> str:
         """Define cómo camina el bicho según este modo"""
-        pass
-    
-    @abstractmethod
-    def atacar(self, bicho) -> str:
-        """Define cómo ataca el bicho según este modo"""
-        pass
-    
-    @abstractmethod
-    def dormir(self, bicho) -> str:
-        """Define cómo duerme el bicho según este modo"""
         pass
     
     @abstractmethod

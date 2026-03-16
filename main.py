@@ -242,6 +242,39 @@ def probar_decorator():
     print(f"   Segunda entrada:")
     bomba.entrar()
 
+def probar_template_method():
+    """
+    Prueba el patrón Template Method con Bicho/Modo.
+    El Template Method está en Modo.actua() que llama a atacar() y duerme().
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN TEMPLATE METHOD")
+    print("=" * 50)
+    
+    # --- Template Method: actua() define el esqueleto ---
+    print("\n-- 1. Bicho Agresivo ejecuta TEMPLATE METHOD actua():")
+    print("   (El algoritmo: atacar -> duerme está definido en Modo)")
+    goblin = Bicho("Goblin", Agresivo(), poder=15)
+    goblin.actua()  # Template Method: llama atacar() y duerme() en orden
+    
+    print("\n-- 2. Bicho Perezoso ejecuta TEMPLATE METHOD actua():")
+    print("   (Mismo algoritmo, pero comportamiento diferente)")
+    troll = Bicho("Troll", Perezoso(), poder=20)
+    troll.actua()  # Mismo esqueleto, diferentes implementaciones
+    
+    print("\n-- 3. Cambiar modo en tiempo de ejecución y ejecutar Template:")
+    goblin.modo = Perezoso()
+    goblin.actua()
+    
+    print("\n-- 4. Llamar operaciones primitivas individualmente:")
+    print("   Atacar (Agresivo):")
+    orco = Bicho("Orco", Agresivo(), poder=25)
+    orco.atacar()
+    print("   Duerme (Perezoso):")
+    orco.modo = Perezoso()
+    orco.duerme()
+
+
 def probar_strategy():
     """
     Prueba el patrón Strategy con Bicho/Modo y Orientaciones.
@@ -254,32 +287,32 @@ def probar_strategy():
     print("\n-- 1. Crear bicho con modo Agresivo (por defecto):")
     bicho = Bicho("Goblin")
     print(f"   {bicho}")
-    bicho.actuar()
+    bicho.actua()
     
     print("\n-- 2. Cambiar modo a Perezoso en tiempo de ejecución:")
     bicho.modo = Perezoso()
-    bicho.actuar()
+    bicho.actua()
     
     print("\n-- 3. Crear bicho directamente con modo Perezoso:")
     bicho2 = Bicho("Troll", Perezoso())
     print(f"   {bicho2}")
-    bicho2.actuar()
+    bicho2.actua()
     
     print("\n-- 4. Cambiar el troll a modo Agresivo:")
     bicho2.modo = Agresivo()
-    bicho2.actuar()
+    bicho2.actua()
     
     # --- Probar nuevos métodos del diagrama ---
-    print("\n-- 5. Probar métodos caminar, atacar, dormir:")
+    print("\n-- 5. Probar métodos caminar, atacar, duerme:")
     print("   Goblin (Perezoso):")
     bicho.caminar()
     bicho.atacar()
-    bicho.dormir()
+    bicho.duerme()
     
     print("\n   Troll (Agresivo):")
     bicho2.caminar()
     bicho2.atacar()
-    bicho2.dormir()
+    bicho2.duerme()
     
     # --- Probar vidas y poder ---
     print("\n-- 6. Probar vidas y poder:")
@@ -354,6 +387,9 @@ def main():
     
     # 10. Probar patrón Strategy
     probar_strategy()
+    
+    # 11. Probar patrón Template Method
+    probar_template_method()
     
     print("\n" + "#" * 60)
     print("#" + " " * 12 + "TODAS LAS PRUEBAS COMPLETADAS" + " " * 12 + "#")
