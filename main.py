@@ -357,6 +357,51 @@ def probar_strategy():
     for b in juego.obtenerBichos():
         print(f"     - {b}")
 
+def probar_singleton():
+    """
+    Prueba el patrón Singleton con las Orientaciones.
+    Verifica que Norte(), Sur(), Este(), Oeste() siempre retornan la misma instancia.
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN SINGLETON")
+    print("=" * 50)
+    
+    # --- 1. Verificar que siempre es la misma instancia ---
+    print("\n-- 1. Crear múltiples 'instancias' de Norte:")
+    norte1 = Norte()
+    norte2 = Norte()
+    norte3 = Norte()
+    
+    print(f"   norte1: id = {id(norte1)}")
+    print(f"   norte2: id = {id(norte2)}")
+    print(f"   norte3: id = {id(norte3)}")
+    print(f"   ¿norte1 is norte2? {norte1 is norte2}")
+    print(f"   ¿norte1 is norte3? {norte1 is norte3}")
+    
+    # --- 2. Verificar todas las orientaciones ---
+    print("\n-- 2. Verificar Singleton en todas las orientaciones:")
+    
+    sur1, sur2 = Sur(), Sur()
+    este1, este2 = Este(), Este()
+    oeste1, oeste2 = Oeste(), Oeste()
+    
+    print(f"   Sur:   sur1 is sur2 = {sur1 is sur2}")
+    print(f"   Este:  este1 is este2 = {este1 is este2}")
+    print(f"   Oeste: oeste1 is oeste2 = {oeste1 is oeste2}")
+    
+    # --- 3. Verificar que obtener_opuesta() retorna el Singleton ---
+    print("\n-- 3. Verificar que obtener_opuesta() retorna el Singleton:")
+    norte = Norte()
+    sur_desde_norte = norte.obtener_opuesta()
+    sur_directo = Sur()
+    
+    print(f"   Norte().obtener_opuesta() is Sur() = {sur_desde_norte is sur_directo}")
+    
+    # --- 4. Beneficio: comparación por identidad ---
+    print("\n-- 4. Beneficio: comparación por identidad (más eficiente):")
+    orientacion_actual = Norte()
+    print(f"   orientacion_actual is Norte() = {orientacion_actual is Norte()}")
+
 def probar_abstract_factory():
     """
     Prueba el patrón Abstract Factory con LaberintoBombasFactory y LaberintoFuegoFactory.
@@ -464,7 +509,10 @@ def main():
     # 11. Probar patrón Template Method
     probar_template_method()
     
-    # 12. Probar patrón Abstract Factory
+    # 12. Probar patrón Singleton
+    probar_singleton()
+    
+    # 13. Probar patrón Abstract Factory
     probar_abstract_factory()
     
     print("\n" + "#" * 60)
