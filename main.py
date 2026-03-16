@@ -19,6 +19,13 @@ from Agresivo import Agresivo
 from Perezoso import Perezoso
 from Orientacion import Orientacion
 from Orientaciones import Norte, Sur, Este, Oeste
+# Abstract Factory imports
+from LaberintoFactory import LaberintoFactory
+from LaberintoBombasFactory import LaberintoBombasFactory
+from LaberintoFuegoFactory import LaberintoFuegoFactory
+from ParedFuego import ParedFuego
+from PuertaBomba import PuertaBomba
+from PuertaFuego import PuertaFuego
 
 def crear_laberinto_simple():
     """
@@ -350,6 +357,72 @@ def probar_strategy():
     for b in juego.obtenerBichos():
         print(f"     - {b}")
 
+def probar_abstract_factory():
+    """
+    Prueba el patrón Abstract Factory con LaberintoBombasFactory y LaberintoFuegoFactory.
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN ABSTRACT FACTORY")
+    print("=" * 50)
+    
+    # --- 1. Laberinto con familia BOMBAS ---
+    print("\n-- 1. Crear laberinto con LaberintoBombasFactory:")
+    juego = Juego()
+    juego.setFactory(LaberintoBombasFactory())
+    laberinto_bombas = juego.fabricarLab2HabAF()
+    
+    print(f"   {laberinto_bombas}")
+    hab1 = laberinto_bombas.obtener_habitaciones(1)
+    if hab1:
+        print(f"   Habitación 1: {hab1}")
+        print(f"   Norte (ParedBomba): {hab1.norte}")
+        print(f"   Sur (PuertaBomba): {hab1.sur}")
+    
+    print("\n   Entrando por el norte (ParedBomba):")
+    hab1.norte.entrar()
+    
+    print("\n   Intentando abrir puerta bomba:")
+    hab1.sur.abrir()
+    
+    # --- 2. Laberinto con familia FUEGO ---
+    print("\n-- 2. Crear laberinto con LaberintoFuegoFactory:")
+    juego2 = Juego()
+    juego2.setFactory(LaberintoFuegoFactory())
+    laberinto_fuego = juego2.fabricarLab2HabAF()
+    
+    print(f"   {laberinto_fuego}")
+    hab1_fuego = laberinto_fuego.obtener_habitaciones(1)
+    if hab1_fuego:
+        print(f"   Habitación 1: {hab1_fuego}")
+        print(f"   Norte (ParedFuego): {hab1_fuego.norte}")
+        print(f"   Sur (PuertaFuego): {hab1_fuego.sur}")
+    
+    print("\n   Entrando por el norte (ParedFuego):")
+    hab1_fuego.norte.entrar()
+    
+    print("\n   Intentando pasar por puerta fuego cerrada:")
+    hab1_fuego.sur.entrar()
+    
+    print("\n   Abriendo puerta fuego y pasando:")
+    hab1_fuego.sur.abrir()
+    hab1_fuego.sur.entrar()
+    
+    # --- 3. Mostrar flexibilidad: cambiar factory en tiempo de ejecución ---
+    print("\n-- 3. Flexibilidad: mismo Juego, diferente factory:")
+    juego3 = Juego()
+    
+    print("   Con LaberintoBombasFactory:")
+    juego3.setFactory(LaberintoBombasFactory())
+    lab1 = juego3.fabricarLab2HabAF()
+    h1 = lab1.obtener_habitaciones(1)
+    print(f"     Pared norte: {h1.norte}")
+    
+    print("   Con LaberintoFuegoFactory:")
+    juego3.setFactory(LaberintoFuegoFactory())
+    lab2 = juego3.fabricarLab2HabAF()
+    h2 = lab2.obtener_habitaciones(3)  # IDs 3 y 4 porque el contador sigue
+    print(f"     Pared norte: {h2.norte}")
+
 def main():
     """
     Función principal que ejecuta todas las pruebas.
@@ -390,6 +463,9 @@ def main():
     
     # 11. Probar patrón Template Method
     probar_template_method()
+    
+    # 12. Probar patrón Abstract Factory
+    probar_abstract_factory()
     
     print("\n" + "#" * 60)
     print("#" + " " * 12 + "TODAS LAS PRUEBAS COMPLETADAS" + " " * 12 + "#")

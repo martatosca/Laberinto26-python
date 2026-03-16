@@ -2,15 +2,55 @@ from Habitacion import Habitacion
 from Pared import Pared
 from Puerta import Puerta
 from Laberinto import Laberinto
+from LaberintoFactory import LaberintoFactory
 
-#Juego es el creator de Factory Method
+#Juego es el creator de Factory Method Y el Client de Abstract Factory
 class Juego:
-    def __init__(self):
+    def __init__(self, factory: LaberintoFactory = None):
         super().__init__()
         self.laberinto=None
         self._contador_habitaciones = 0  # Contador para generar IDs únicos
         self.bichos = []  # Lista de bichos del juego (0..*)
+        self._factory = factory  # Abstract Factory (opcional)
         
+    # ==================== ABSTRACT FACTORY ====================
+    def setFactory(self, factory: LaberintoFactory):
+        """Establece la factory a usar (Abstract Factory)"""
+        self._factory = factory
+    
+    def fabricarLab2HabAF(self):
+        """
+        Crea un laberinto usando ABSTRACT FACTORY.
+        Usa la factory inyectada para crear Pared y Puerta.
+        """
+        if self._factory is None:
+            raise ValueError("No se ha establecido una factory. Use setFactory() primero.")
+        
+        hab1 = self.fabricarHabitacion()
+        hab2 = self.fabricarHabitacion()
+        
+        # Usar la Abstract Factory para crear puerta y paredes
+        puerta = self._factory.fabricarPuerta(hab1, hab2)
+        
+        # Habitación 1
+        hab1.sur = puerta
+        hab1.norte = self._factory.fabricarPared()
+        hab1.este = self._factory.fabricarPared()
+        hab1.oeste = self._factory.fabricarPared()
+        
+        # Habitación 2
+        hab2.norte = puerta
+        hab2.sur = self._factory.fabricarPared()
+        hab2.este = self._factory.fabricarPared()
+        hab2.oeste = self._factory.fabricarPared()
+        
+        self.laberinto = self.fabricarLaberinto()
+        self.laberinto.agregar_Habitacion(hab1)
+        self.laberinto.agregar_Habitacion(hab2)
+        
+        return self.laberinto
+    
+    # ==================== FACTORY METHOD ====================
     def fabricarPared(self):
         return Pared()
     
