@@ -12,6 +12,7 @@ from JuegoBomba import JuegoBomba
 from Decorator import Decorator
 from Bomba import Bomba
 from Hechizo import Hechizo
+from ElementoMapa import ElementoMapa
 # Strategy imports
 from Bicho import Bicho
 from Modo import Modo
@@ -31,6 +32,8 @@ from Director import Director
 from LaberintoBuilder import LaberintoBuilder
 from Builder import Builder
 from Armario import Armario
+# Proxy imports
+from Tunel import Tunel
 
 def crear_laberinto_simple():
     """
@@ -560,6 +563,89 @@ def probar_builder():
     print(f"   Hab2.Oeste es puerta: {h2.oeste.es_puerta()}")
     print(f"   ¿Son la misma puerta? {h1.este is h2.oeste}")
 
+def probar_proxy():
+    """
+    Prueba el patrón Proxy con Tunel.
+    El Tunel actúa como proxy de un Laberinto, controlando el acceso.
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN PROXY (TUNEL)")
+    print("=" * 50)
+    
+    # --- 1. Crear dos laberintos ---
+    print("\n-- 1. Crear dos laberintos separados:")
+    
+    # Laberinto 1 (mundo normal)
+    lab1 = Laberinto()
+    hab1 = Habitacion(1)
+    hab2 = Habitacion(2)
+    puerta = Puerta(hab1, hab2)
+    
+    hab1.setNorte(Pared())
+    hab1.setSur(puerta)
+    hab1.setEste(Pared())
+    hab1.setOeste(Pared())
+    
+    hab2.setNorte(puerta)
+    hab2.setSur(Pared())
+    hab2.setEste(Pared())
+    hab2.setOeste(Pared())
+    
+    lab1.agregar_Habitacion(hab1)
+    lab1.agregar_Habitacion(hab2)
+    
+    # Laberinto 2 (mundo secreto)
+    lab2 = Laberinto()
+    hab_secreta = Habitacion(100)
+    hab_secreta.setNorte(Pared())
+    hab_secreta.setSur(Pared())
+    hab_secreta.setEste(Pared())
+    hab_secreta.setOeste(Pared())
+    lab2.agregar_Habitacion(hab_secreta)
+    
+    print(f"   Laberinto 1: {lab1}")
+    print(f"   Laberinto 2 (secreto): {lab2}")
+    
+    # --- 2. Crear Tunel (Proxy) que conecta los laberintos ---
+    print("\n-- 2. Crear Tunel (Proxy) hacia laberinto secreto:")
+    tunel = Tunel(lab2)
+    print(f"   {tunel}")
+    
+    # Poner el tunel en la habitación 1
+    hab1.reemplazar_lado("este", tunel)
+    print(f"   Tunel colocado en Hab1.Este")
+    
+    # --- 3. Probar entrar a través del Proxy ---
+    print("\n-- 3. Entrar en el túnel (sin alguien):")
+    tunel.entrar()
+    
+    # --- 4. Probar con un Bicho ---
+    print("\n-- 4. Un bicho entra en el túnel:")
+    bicho = Bicho("Explorador", Agresivo())
+    bicho.posicion = hab1
+    print(f"   Bicho posición inicial: Hab-{bicho.posicion.id}")
+    
+    tunel.entrar(bicho)
+    print(f"   Bicho posición final: Hab-{bicho.posicion.id}")
+    
+    # --- 5. Probar túnel sin destino ---
+    print("\n-- 5. Túnel sin destino:")
+    tunel_vacio = Tunel()  # Sin laberinto
+    print(f"   {tunel_vacio}")
+    tunel_vacio.entrar()
+    
+    # --- 6. Recorrer a través del Proxy ---
+    print("\n-- 6. Recorrer túnel (incluye laberinto destino):")
+    for i, elem in enumerate(tunel.recorrer(), 1):
+        print(f"   {i}. {elem}")
+    
+    # --- 7. Verificar estructura del Proxy ---
+    print("\n-- 7. Estructura del patrón:")
+    print(f"   Subject: ElementoMapa (interfaz común)")
+    print(f"   RealSubject: {tunel.laberinto.__class__.__name__}")
+    print(f"   Proxy: {tunel.__class__.__name__}")
+    print(f"   ¿Tunel hereda de ElementoMapa? {isinstance(tunel, ElementoMapa)}")
+
 def main():
     """
     Función principal que ejecuta todas las pruebas.
@@ -609,6 +695,9 @@ def main():
     
     # 14. Probar patrón Builder
     probar_builder()
+    
+    # 15. Probar patrón Proxy
+    probar_proxy()
     
     print("\n" + "#" * 60)
     print("#" + " " * 12 + "TODAS LAS PRUEBAS COMPLETADAS" + " " * 12 + "#")

@@ -12,6 +12,13 @@ class Laberinto(Contenedor):
     def obtener_habitaciones(self,numero): #devuelve la habitacion con ese numero o None si no existe
         return self.habitaciones.get(numero, None)
     
+    def obtener_primera_habitacion(self):
+        """Obtiene la primera habitación del laberinto (la de menor número)"""
+        if self.habitaciones:
+            min_key = min(self.habitaciones.keys())
+            return self.habitaciones[min_key]
+        return None
+    
     def entrar(self):
         print("Has entrado al laberinto")
     
