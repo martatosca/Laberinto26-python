@@ -42,5 +42,13 @@ class Modo(ABC):
         """Devuelve el nombre del modo"""
         pass
     
+    @abstractmethod
+    def cambiar_modo(self, bicho):
+        """
+        Adapter: Cambia el modo del bicho al modo opuesto.
+        Agresivo -> Perezoso, Perezoso -> Agresivo
+        """
+        pass
+    
     def __str__(self):
         return self.obtener_nombre()

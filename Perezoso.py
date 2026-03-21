@@ -28,3 +28,13 @@ class Perezoso(Modo):
     
     def obtener_nombre(self) -> str:
         return "Perezoso"
+    
+    def cambiar_modo(self, bicho):
+        """
+        Adapter: Cambia de Perezoso a Agresivo.
+        """
+        from Agresivo import Agresivo
+        nuevo_modo = Agresivo()
+        bicho.modo = nuevo_modo
+        print(f"  ✨ {bicho.nombre} cambia de Perezoso a Agresivo")
+        return nuevo_modo

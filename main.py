@@ -34,6 +34,11 @@ from Builder import Builder
 from Armario import Armario
 # Proxy imports
 from Tunel import Tunel
+# Adapter imports
+from Varita import Varita
+from BichoAdapter import BichoAdapter
+from Personaje import Personaje
+from Ente import Ente
 
 def crear_laberinto_simple():
     """
@@ -646,6 +651,63 @@ def probar_proxy():
     print(f"   Proxy: {tunel.__class__.__name__}")
     print(f"   ¿Tunel hereda de ElementoMapa? {isinstance(tunel, ElementoMapa)}")
 
+def probar_adapter():
+    """
+    Prueba el patrón Adapter con Personaje, Varita y BichoAdapter.
+    El Personaje (Client) usa una Varita (Target) para cambiar el modo de un Bicho.
+    BichoAdapter adapta la interfaz del Bicho a la de Varita.
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN ADAPTER")
+    print("=" * 50)
+    
+    # --- 1. Crear un Bicho con modo Agresivo ---
+    print("\n-- 1. Crear bicho con modo Agresivo:")
+    bicho = Bicho("Goblin", Agresivo(), vidas=5, poder=15)
+    print(f"   {bicho}")
+    print(f"   Modo actual: {bicho.modo}")
+    
+    # --- 2. Crear el Adapter ---
+    print("\n-- 2. Crear BichoAdapter (adapta Bicho a Varita):")
+    adapter = BichoAdapter(bicho)
+    print(f"   {adapter}")
+    print(f"   ¿Adapter es Varita? {isinstance(adapter, Varita)}")
+    
+    # --- 3. Crear Personaje (Client) ---
+    print("\n-- 3. Crear Personaje (Client):")
+    mago = Personaje("Merlín", vidas=10, poder=20)
+    print(f"   {mago}")
+    
+    # --- 4. Personaje usa la Varita (Adapter) para cambiar modo ---
+    print("\n-- 4. Personaje usa varita para cambiar modo del bicho:")
+    mago.varita = adapter
+    mago.usar_varita()
+    print(f"   Modo actual del bicho: {bicho.modo}")
+    
+    # --- 5. Volver a cambiar (Perezoso -> Agresivo) ---
+    print("\n-- 5. Cambiar de nuevo (Perezoso -> Agresivo):")
+    mago.usar_varita()
+    print(f"   Modo actual del bicho: {bicho.modo}")
+    
+    # --- 6. Usar método alternativo con varita como parámetro ---
+    print("\n-- 6. Usar varita como parámetro:")
+    otro_bicho = Bicho("Troll", Perezoso(), vidas=8, poder=25)
+    otro_adapter = BichoAdapter(otro_bicho)
+    print(f"   Troll modo inicial: {otro_bicho.modo}")
+    mago.cambiar_modo_bicho(otro_adapter)
+    print(f"   Troll modo final: {otro_bicho.modo}")
+    
+    # --- 7. Verificar estructura del patrón ---
+    print("\n-- 7. Estructura del patrón Adapter:")
+    print(f"   Target: Varita (interfaz esperada)")
+    print(f"   Adaptee: Bicho (interfaz existente)")
+    print(f"   Adapter: BichoAdapter")
+    print(f"   Client: Personaje")
+    print(f"   ")
+    print(f"   Personaje --usa--> Varita (Target)")
+    print(f"   BichoAdapter --implementa--> Varita")
+    print(f"   BichoAdapter --tiene--> Bicho (Adaptee)")
+
 def main():
     """
     Función principal que ejecuta todas las pruebas.
@@ -698,6 +760,9 @@ def main():
     
     # 15. Probar patrón Proxy
     probar_proxy()
+    
+    # 16. Probar patrón Adapter
+    probar_adapter()
     
     print("\n" + "#" * 60)
     print("#" + " " * 12 + "TODAS LAS PRUEBAS COMPLETADAS" + " " * 12 + "#")
