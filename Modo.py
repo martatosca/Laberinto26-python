@@ -34,8 +34,30 @@ class Modo(ABC):
     # ==================== OTROS MÉTODOS ====================
     @abstractmethod
     def caminar(self, bicho) -> str:
-        """Define cómo camina el bicho según este modo"""
+        """Define cómo camina el bicho según este modo (estilo)"""
         pass
+    
+    def camina(self, bicho):
+        """
+        Según código del profesor:
+        Modo>>camina:unBicho
+            | or |
+            or:=unBicho posicion obtenerOrientacionAleatoria.
+            or caminar:unBicho.
+        
+        Obtiene orientación aleatoria de la habitación y hace que el bicho camine.
+        """
+        if bicho.posicion is None:
+            print(f"{bicho.nombre} no tiene posición")
+            return
+        
+        # Obtener orientación aleatoria de la posición actual
+        orientacion = bicho.posicion.obtener_orientacion_aleatoria()
+        if orientacion:
+            self.caminar(bicho)  # Primero muestra el estilo de caminar
+            orientacion.caminar(bicho)  # Luego mueve al bicho
+        else:
+            print(f"{bicho.nombre} no puede moverse (sin orientaciones)")
     
     @abstractmethod
     def obtener_nombre(self) -> str:

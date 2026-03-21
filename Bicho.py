@@ -1,18 +1,18 @@
 from Modo import Modo
 from Agresivo import Agresivo
+from Ente import Ente
 
-class Bicho:
+class Bicho(Ente):
     """
     Context del patrón Strategy/Template Method para Modo.
     Representa una criatura del laberinto con un modo de comportamiento intercambiable.
+    Hereda de Ente (vidas, poder, posicion, esta_vivo).
     """
     
     def __init__(self, nombre: str, modo: Modo = None, vidas: int = 3, poder: int = 10):
+        super().__init__(vidas, poder)  # Llama al constructor de Ente
         self.nombre = nombre
         self._modo = modo if modo else Agresivo()  # Modo por defecto: Agresivo
-        self.posicion = None  # Habitación donde se encuentra
-        self.vidas = vidas
-        self.poder = poder
     
     @property
     def modo(self) -> Modo:
@@ -29,8 +29,15 @@ class Bicho:
         return self._modo.actua(self)
     
     def caminar(self):
-        """Delega el caminar al modo actual"""
+        """Delega el caminar al modo actual (estilo de caminar)"""
         return self._modo.caminar(self)
+    
+    def camina(self):
+        """
+        Delega al modo para que el bicho camine usando orientación aleatoria.
+        Según código del profesor: obtiene orientación aleatoria y camina.
+        """
+        return self._modo.camina(self)
     
     def atacar(self):
         """Delega el atacar al modo actual"""
@@ -46,14 +53,11 @@ class Bicho:
         print(f"{self.nombre} ha entrado en la habitación {habitacion.id}")
     
     def recibir_dano(self, cantidad: int):
-        """El bicho recibe daño y pierde vidas"""
-        self.vidas -= cantidad
+        """Sobreescribe para mensajes específicos del bicho"""
+        super().recibir_dano(cantidad)
         print(f"{self.nombre} recibe {cantidad} de daño. Vidas restantes: {self.vidas}")
-        if self.vidas <= 0:
+        if not self.esta_vivo():
             print(f"{self.nombre} ha sido derrotado!")
-    
-    def esta_vivo(self) -> bool:
-        return self.vidas > 0
     
     def __str__(self):
         return f"Bicho({self.nombre}, modo={self._modo}, vidas={self.vidas}, poder={self.poder})"
