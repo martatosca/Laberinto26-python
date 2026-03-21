@@ -26,6 +26,11 @@ from LaberintoFuegoFactory import LaberintoFuegoFactory
 from ParedFuego import ParedFuego
 from PuertaBomba import PuertaBomba
 from PuertaFuego import PuertaFuego
+# Builder imports
+from Director import Director
+from LaberintoBuilder import LaberintoBuilder
+from Builder import Builder
+from Armario import Armario
 
 def crear_laberinto_simple():
     """
@@ -468,6 +473,93 @@ def probar_abstract_factory():
     h2 = lab2.obtener_habitaciones(3)  # IDs 3 y 4 porque el contador sigue
     print(f"     Pared norte: {h2.norte}")
 
+def probar_builder():
+    """
+    Prueba el patrón Builder con Director y LaberintoBuilder.
+    Construye laberintos desde archivos JSON.
+    """
+    print("\n" + "=" * 50)
+    print("PROBANDO PATRÓN BUILDER")
+    print("=" * 50)
+    
+    import os
+    ruta_base = os.path.dirname(os.path.abspath(__file__))
+    ruta_laberintos = os.path.join(ruta_base, "laberintos")
+    
+    # --- 1. Crear laberinto simple (2 habitaciones) ---
+    print("\n-- 1. Crear laberinto desde lab2hab.json:")
+    director = Director()
+    archivo = os.path.join(ruta_laberintos, "lab2hab.json")
+    
+    try:
+        juego = director.procesar(archivo)
+        print(f"   Laberinto creado: {juego.laberinto}")
+        
+        hab1 = juego.obtenerHabitacion(1)
+        hab2 = juego.obtenerHabitacion(2)
+        
+        if hab1:
+            print(f"   Hab 1: {hab1}")
+            print(f"   Orientaciones de Hab 1: {[str(o) for o in hab1.orientaciones]}")
+        if hab2:
+            print(f"   Hab 2: {hab2}")
+        
+        # Verificar que la puerta conecta las habitaciones
+        print(f"\n   ¿Puerta sur de Hab1 es puerta? {hab1.sur.es_puerta()}")
+        print(f"   ¿Puerta conecta Hab1 y Hab2? lado1={hab1.sur.lado1.id}, lado2={hab1.sur.lado2.id}")
+        
+    except FileNotFoundError:
+        print(f"   ERROR: No se encontró el archivo {archivo}")
+    
+    # --- 2. Crear laberinto con 4 habitaciones, bombas y bichos ---
+    print("\n-- 2. Crear laberinto desde lab4hab2bichos.json:")
+    director2 = Director()
+    archivo2 = os.path.join(ruta_laberintos, "lab4hab2bichos.json")
+    
+    try:
+        juego2 = director2.procesar(archivo2)
+        print(f"   Laberinto creado: {juego2.laberinto}")
+        
+        # Mostrar habitaciones
+        for i in range(1, 5):
+            hab = juego2.obtenerHabitacion(i)
+            if hab:
+                print(f"   Hab {i}: N={hab.norte}, S={hab.sur}, E={hab.este}, O={hab.oeste}")
+        
+        # Mostrar bichos
+        print(f"\n   Bichos creados: {len(juego2.obtenerBichos())}")
+        for bicho in juego2.obtenerBichos():
+            print(f"     - {bicho.nombre} en {bicho.posicion}")
+        
+        # Recorrer laberinto
+        print("\n   Recorriendo laberinto con Iterator:")
+        for i, elem in enumerate(juego2.laberinto, 1):
+            if i <= 10:  # Limitar output
+                print(f"     {i}. {elem}")
+            elif i == 11:
+                print(f"     ... (y más elementos)")
+                break
+                
+    except FileNotFoundError:
+        print(f"   ERROR: No se encontró el archivo {archivo2}")
+    
+    # --- 3. Probar Builder directamente (sin Director) ---
+    print("\n-- 3. Usar LaberintoBuilder directamente:")
+    builder = LaberintoBuilder()
+    builder.fabricarLaberinto()
+    builder.fabricarHabitacion(1)
+    builder.fabricarHabitacion(2)
+    builder.fabricarPuertaLado1Or1Lado2Or2(1, "Este", 2, "Oeste")
+    
+    lab = builder.obtenerLaberinto()
+    print(f"   Laberinto: {lab}")
+    
+    h1 = lab.obtener_habitaciones(1)
+    h2 = lab.obtener_habitaciones(2)
+    print(f"   Hab1.Este es puerta: {h1.este.es_puerta()}")
+    print(f"   Hab2.Oeste es puerta: {h2.oeste.es_puerta()}")
+    print(f"   ¿Son la misma puerta? {h1.este is h2.oeste}")
+
 def main():
     """
     Función principal que ejecuta todas las pruebas.
@@ -514,6 +606,9 @@ def main():
     
     # 13. Probar patrón Abstract Factory
     probar_abstract_factory()
+    
+    # 14. Probar patrón Builder
+    probar_builder()
     
     print("\n" + "#" * 60)
     print("#" + " " * 12 + "TODAS LAS PRUEBAS COMPLETADAS" + " " * 12 + "#")

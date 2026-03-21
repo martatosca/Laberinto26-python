@@ -106,6 +106,10 @@ class Juego:
         """Devuelve la lista de bichos"""
         return list(self.bichos)
     
+    def obtenerHabitacion(self, num: int):
+        """Obtiene una habitación por su número"""
+        return self.laberinto.obtener_habitaciones(num) if self.laberinto else None
+    
     #product= ElementoMapa
     #concreteProduct= Habitacion, Pared, Puerta
     #creator= Juego

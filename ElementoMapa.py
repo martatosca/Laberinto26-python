@@ -29,6 +29,10 @@ class ElementoMapa(ABC):
     def __iter__(self) -> Iterator["ElementoMapa"]:
         return self.recorrer()
 
+    def es_puerta(self) -> bool:
+        """Indica si este elemento es una puerta. Por defecto False."""
+        return False
+
     @abstractmethod
     def __str__(self) -> str:
         pass
