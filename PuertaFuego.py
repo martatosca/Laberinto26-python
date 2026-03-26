@@ -1,14 +1,11 @@
 from Puerta import Puerta
 
 class PuertaFuego(Puerta):
-    """
-    ConcreteProduct del patrón Abstract Factory.
-    Es una puerta envuelta en llamas que quema al pasar.
-    """
+    
     
     def __init__(self, lado1=None, lado2=None, abierta=False, intensidad: int = 3):
         super().__init__(lado1, lado2, abierta)
-        self.intensidad = intensidad  # Intensidad del fuego
+        self.intensidad = intensidad
         self.encendida = True
     
     def entrar(self):
@@ -24,12 +21,12 @@ class PuertaFuego(Puerta):
                 print("La puerta está cerrada, no puedes pasar.")
     
     def apagar(self):
-        """Apaga el fuego de la puerta"""
+        
         self.encendida = False
         print("El fuego de la puerta se ha apagado.")
     
     def encender(self):
-        """Enciende el fuego de la puerta"""
+        
         self.encendida = True
         print("El fuego de la puerta se ha encendido.")
     

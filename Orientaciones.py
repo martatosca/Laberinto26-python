@@ -1,14 +1,11 @@
 from Orientacion import Orientacion
 
 class Norte(Orientacion):
-    """
-    ConcreteStrategy + Singleton: Orientación Norte.
-    Solo existe una instancia de Norte en todo el programa.
-    """
-    _unicaInstancia = None  # Singleton: única instancia
+    
+    _unicaInstancia = None
     
     def __new__(cls):
-        """Singleton: retorna siempre la misma instancia"""
+        
         if cls._unicaInstancia is None:
             cls._unicaInstancia = super().__new__(cls)
         return cls._unicaInstancia
@@ -17,18 +14,14 @@ class Norte(Orientacion):
         return "Norte"
     
     def obtener_opuesta(self) -> Orientacion:
-        return Sur()  # Retorna el Singleton de Sur
-
+        return Sur()
 
 class Sur(Orientacion):
-    """
-    ConcreteStrategy + Singleton: Orientación Sur.
-    Solo existe una instancia de Sur en todo el programa.
-    """
-    _unicaInstancia = None  # Singleton: única instancia
+    
+    _unicaInstancia = None
     
     def __new__(cls):
-        """Singleton: retorna siempre la misma instancia"""
+        
         if cls._unicaInstancia is None:
             cls._unicaInstancia = super().__new__(cls)
         return cls._unicaInstancia
@@ -37,18 +30,14 @@ class Sur(Orientacion):
         return "Sur"
     
     def obtener_opuesta(self) -> Orientacion:
-        return Norte()  # Retorna el Singleton de Norte
-
+        return Norte()
 
 class Este(Orientacion):
-    """
-    ConcreteStrategy + Singleton: Orientación Este.
-    Solo existe una instancia de Este en todo el programa.
-    """
-    _unicaInstancia = None  # Singleton: única instancia
+    
+    _unicaInstancia = None
     
     def __new__(cls):
-        """Singleton: retorna siempre la misma instancia"""
+        
         if cls._unicaInstancia is None:
             cls._unicaInstancia = super().__new__(cls)
         return cls._unicaInstancia
@@ -57,18 +46,14 @@ class Este(Orientacion):
         return "Este"
     
     def obtener_opuesta(self) -> Orientacion:
-        return Oeste()  # Retorna el Singleton de Oeste
-
+        return Oeste()
 
 class Oeste(Orientacion):
-    """
-    ConcreteStrategy + Singleton: Orientación Oeste.
-    Solo existe una instancia de Oeste en todo el programa.
-    """
-    _unicaInstancia = None  # Singleton: única instancia
+    
+    _unicaInstancia = None
     
     def __new__(cls):
-        """Singleton: retorna siempre la misma instancia"""
+        
         if cls._unicaInstancia is None:
             cls._unicaInstancia = super().__new__(cls)
         return cls._unicaInstancia
@@ -77,4 +62,64 @@ class Oeste(Orientacion):
         return "Oeste"
     
     def obtener_opuesta(self) -> Orientacion:
-        return Este()  # Retorna el Singleton de Este
+        return Este()
+
+class Noreste(Orientacion):
+    
+    _unicaInstancia = None
+    
+    def __new__(cls):
+        if cls._unicaInstancia is None:
+            cls._unicaInstancia = super().__new__(cls)
+        return cls._unicaInstancia
+    
+    def obtener_nombre(self) -> str:
+        return "Noreste"
+    
+    def obtener_opuesta(self) -> Orientacion:
+        return Suroeste()
+
+class Noroeste(Orientacion):
+    
+    _unicaInstancia = None
+    
+    def __new__(cls):
+        if cls._unicaInstancia is None:
+            cls._unicaInstancia = super().__new__(cls)
+        return cls._unicaInstancia
+    
+    def obtener_nombre(self) -> str:
+        return "Noroeste"
+    
+    def obtener_opuesta(self) -> Orientacion:
+        return Sureste()
+
+class Sureste(Orientacion):
+    
+    _unicaInstancia = None
+    
+    def __new__(cls):
+        if cls._unicaInstancia is None:
+            cls._unicaInstancia = super().__new__(cls)
+        return cls._unicaInstancia
+    
+    def obtener_nombre(self) -> str:
+        return "Sureste"
+    
+    def obtener_opuesta(self) -> Orientacion:
+        return Noroeste()
+
+class Suroeste(Orientacion):
+    
+    _unicaInstancia = None
+    
+    def __new__(cls):
+        if cls._unicaInstancia is None:
+            cls._unicaInstancia = super().__new__(cls)
+        return cls._unicaInstancia
+    
+    def obtener_nombre(self) -> str:
+        return "Suroeste"
+    
+    def obtener_opuesta(self) -> Orientacion:
+        return Noreste()

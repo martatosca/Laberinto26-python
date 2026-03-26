@@ -1,5 +1,4 @@
 from Pared import Pared
-#es subclase de pared, pero tiene una bomba que se activa al entrar en la habitación
 class ParedBomba(Pared):
     def __init__(self, activa=True):
         super().__init__()

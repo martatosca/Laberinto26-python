@@ -9,11 +9,11 @@ class Laberinto(Contenedor):
         self.habitaciones[habitacion.id] = habitacion
         self.agregar_hijo(habitacion)
         
-    def obtener_habitaciones(self,numero): #devuelve la habitacion con ese numero o None si no existe
+    def obtener_habitaciones(self,numero):
         return self.habitaciones.get(numero, None)
     
     def obtener_primera_habitacion(self):
-        """Obtiene la primera habitación del laberinto (la de menor número)"""
+        
         if self.habitaciones:
             min_key = min(self.habitaciones.keys())
             return self.habitaciones[min_key]

@@ -1,13 +1,28 @@
 from ElementoMapa import ElementoMapa
 
 class Contenedor(ElementoMapa):
-    """
-    Composite del patrón Composite: Mantiene una lista de hijos ElementoMapa y permite recorrerlos (Iterator).
-    """
+    
 
-    def __init__(self):
+    def __init__(self, forma=None):
         super().__init__()
-        self.hijos = []  
+        self.hijos = []
+        self._forma = forma
+    
+    @property
+    def forma(self):
+        
+        return self._forma
+    
+    @forma.setter
+    def forma(self, value):
+        
+        self._forma = value
+    
+    def obtener_orientaciones(self):
+        
+        if self._forma:
+            return self._forma.obtener_orientaciones()
+        return []  
 
     def agregar_hijo(self, hijo):
         if hijo is None:
@@ -16,14 +31,12 @@ class Contenedor(ElementoMapa):
         self.hijos.append(hijo)
 
     def eliminar_hijo(self, hijo):
-        # Si no está, avisamos con un error
         if hijo not in self.hijos:
             raise ValueError("Ese hijo no está en la lista de hijos")
         self.hijos.remove(hijo)
         hijo.padre = None
 
     def obtener_hijos(self):
-        # Devolvemos copia para que no modifiquen la lista desde fuera
         return list(self.hijos)
 
     def recorrer(self):

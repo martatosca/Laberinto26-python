@@ -2,8 +2,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Iterator, Optional, TYPE_CHECKING
 
-
-
 class ElementoMapa(ABC):
     def __init__(self) -> None:
         self.padre = None
@@ -25,12 +23,11 @@ class ElementoMapa(ABC):
     def recorrer(self) -> Iterator["ElementoMapa"]:
         pass
 
-    #Iterador externo
     def __iter__(self) -> Iterator["ElementoMapa"]:
         return self.recorrer()
 
     def es_puerta(self) -> bool:
-        """Indica si este elemento es una puerta. Por defecto False."""
+        
         return False
 
     @abstractmethod

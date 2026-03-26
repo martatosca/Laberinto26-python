@@ -4,41 +4,33 @@ from Puerta import Puerta
 from Laberinto import Laberinto
 from LaberintoFactory import LaberintoFactory
 
-#Juego es el creator de Factory Method Y el Client de Abstract Factory
 class Juego:
     def __init__(self, factory: LaberintoFactory = None):
         super().__init__()
         self.laberinto=None
-        self._contador_habitaciones = 0  # Contador para generar IDs únicos
-        self.bichos = []  # Lista de bichos del juego (0..*)
-        self._factory = factory  # Abstract Factory (opcional)
+        self._contador_habitaciones = 0
+        self.bichos = []
+        self._factory = factory
         
-    # ==================== ABSTRACT FACTORY ====================
     def setFactory(self, factory: LaberintoFactory):
-        """Establece la factory a usar (Abstract Factory)"""
+        
         self._factory = factory
     
     def fabricarLab2HabAF(self):
-        """
-        Crea un laberinto usando ABSTRACT FACTORY.
-        Usa la factory inyectada para crear Pared y Puerta.
-        """
+        
         if self._factory is None:
             raise ValueError("No se ha establecido una factory. Use setFactory() primero.")
         
         hab1 = self.fabricarHabitacion()
         hab2 = self.fabricarHabitacion()
         
-        # Usar la Abstract Factory para crear puerta y paredes
         puerta = self._factory.fabricarPuerta(hab1, hab2)
         
-        # Habitación 1
         hab1.sur = puerta
         hab1.norte = self._factory.fabricarPared()
         hab1.este = self._factory.fabricarPared()
         hab1.oeste = self._factory.fabricarPared()
         
-        # Habitación 2
         hab2.norte = puerta
         hab2.sur = self._factory.fabricarPared()
         hab2.este = self._factory.fabricarPared()
@@ -50,7 +42,6 @@ class Juego:
         
         return self.laberinto
     
-    # ==================== FACTORY METHOD ====================
     def fabricarPared(self):
         return Pared()
     
@@ -76,12 +67,10 @@ class Juego:
         hab1=self.fabricarHabitacion()
         hab2=self.fabricarHabitacion()        
         puerta=self.fabricarPuertaLado1Lado2(hab1, hab2)    
-        #habitacion 1
         hab1.sur=puerta
         hab1.norte=self.fabricarPared()
         hab1.este=self.fabricarPared()
         hab1.oeste=self.fabricarPared()
-        #habitacion 2
         hab2.norte=puerta
         hab2.sur=self.fabricarPared()
         hab2.este=self.fabricarPared()
@@ -94,24 +83,18 @@ class Juego:
         return self.laberinto
     
     def agregarBicho(self, bicho):
-        """Añade un bicho al juego"""
+        
         self.bichos.append(bicho)
     
     def eliminarBicho(self, bicho):
-        """Elimina un bicho del juego"""
+        
         if bicho in self.bichos:
             self.bichos.remove(bicho)
     
     def obtenerBichos(self):
-        """Devuelve la lista de bichos"""
+        
         return list(self.bichos)
     
     def obtenerHabitacion(self, num: int):
-        """Obtiene una habitación por su número"""
+        
         return self.laberinto.obtener_habitaciones(num) if self.laberinto else None
-    
-    #product= ElementoMapa
-    #concreteProduct= Habitacion, Pared, Puerta
-    #creator= Juego
-    #factoryMethod= fabricarPared, fabricarPuerta, fabricarHabitacion, fabricarLaberinto, fabricarPuertaLado1Lado2
-    #anOperation(): fabricarLab2HabFM             
