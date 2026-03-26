@@ -36,6 +36,9 @@ class Bicho(Ente):
         
         return self._modo.atacar(self)
     
+    def atacarA(self, objetivo):
+        self.notificar("atacar", objetivo)
+    
     def duerme(self):
         
         return self._modo.duerme(self)
@@ -44,6 +47,7 @@ class Bicho(Ente):
         
         self.posicion = habitacion
         print(f"{self.nombre} ha entrado en la habitación {habitacion.id}")
+        self.notificar("entrar_habitacion", habitacion)
     
     def recibir_dano(self, cantidad: int):
         
@@ -51,6 +55,7 @@ class Bicho(Ente):
         print(f"{self.nombre} recibe {cantidad} de daño. Vidas restantes: {self.vidas}")
         if not self.esta_vivo():
             print(f"{self.nombre} ha sido derrotado!")
+            self.notificar("derrotado", None)
     
     def __str__(self):
         return f"Bicho({self.nombre}, modo={self._modo}, vidas={self.vidas}, poder={self.poder})"

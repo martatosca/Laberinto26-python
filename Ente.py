@@ -5,6 +5,19 @@ class Ente:
         self.vidas = vidas
         self.poder = poder
         self.posicion = None
+        self._juego = None
+    
+    @property
+    def juego(self):
+        return self._juego
+    
+    @juego.setter
+    def juego(self, value):
+        self._juego = value
+    
+    def notificar(self, evento: str, datos=None):
+        if self._juego:
+            self._juego.notificar(self, evento, datos)
     
     def esta_vivo(self) -> bool:
         

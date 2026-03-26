@@ -10,9 +10,46 @@ class Juego:
         self.laberinto=None
         self._contador_habitaciones = 0
         self.bichos = []
+        self.personaje = None
         self._factory = factory
+    
+    def notificar(self, emisor, evento: str, datos=None):
+        if evento == "atacar":
+            self._gestionar_ataque(emisor, datos)
+        elif evento == "entrar_habitacion":
+            self._gestionar_entrada_habitacion(emisor, datos)
+        elif evento == "derrotado":
+            self._gestionar_derrotado(emisor)
+    
+    def _gestionar_ataque(self, atacante, objetivo):
+        if objetivo and hasattr(objetivo, 'recibir_dano'):
+            dano = atacante.poder
+            print(f"[Juego] {atacante.nombre} ataca a {objetivo.nombre} con {dano} de daño")
+            objetivo.recibir_dano(dano)
+    
+    def _gestionar_entrada_habitacion(self, ente, habitacion):
+        from Bicho import Bicho
+        from Personaje import Personaje
+        
+        if isinstance(ente, Personaje):
+            for bicho in self.bichos:
+                if bicho.posicion == habitacion and bicho.esta_vivo():
+                    print(f"[Juego] ¡{ente.nombre} se encuentra con {bicho.nombre}!")
+        elif isinstance(ente, Bicho):
+            if self.personaje and self.personaje.posicion == habitacion:
+                print(f"[Juego] ¡{ente.nombre} se encuentra con {self.personaje.nombre}!")
+    
+    def _gestionar_derrotado(self, ente):
+        from Bicho import Bicho
+        if isinstance(ente, Bicho):
+            self.eliminarBicho(ente)
+            print(f"[Juego] {ente.nombre} ha sido eliminado del juego")
         
     def setFactory(self, factory: LaberintoFactory):
+        
+        self._factory = factory
+    
+    def fabricarLab2HabAF(self):
         
         self._factory = factory
     
@@ -83,13 +120,18 @@ class Juego:
         return self.laberinto
     
     def agregarBicho(self, bicho):
-        
+        bicho.juego = self
         self.bichos.append(bicho)
+    
+    def agregarPersonaje(self, personaje):
+        personaje.juego = self
+        self.personaje = personaje
     
     def eliminarBicho(self, bicho):
         
         if bicho in self.bichos:
             self.bichos.remove(bicho)
+            bicho.juego = None
     
     def obtenerBichos(self):
         

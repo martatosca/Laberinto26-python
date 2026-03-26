@@ -31,10 +31,21 @@ class Personaje(Ente):
         print(f"{self.nombre} apunta con la varita...")
         return varita.cambiar_modo()
     
+    def atacarA(self, objetivo):
+        self.notificar("atacar", objetivo)
+    
     def entrar_habitacion(self, habitacion):
         
         self.posicion = habitacion
         print(f"{self.nombre} ha entrado en la habitación {habitacion.id}")
+        self.notificar("entrar_habitacion", habitacion)
+    
+    def recibir_dano(self, cantidad: int):
+        super().recibir_dano(cantidad)
+        print(f"{self.nombre} recibe {cantidad} de daño. Vidas restantes: {self.vidas}")
+        if not self.esta_vivo():
+            print(f"{self.nombre} ha sido derrotado!")
+            self.notificar("derrotado", None)
     
     def __str__(self):
         return f"Personaje({self.nombre}, vidas={self.vidas})"
