@@ -1,0 +1,5 @@
+# Dependencias del proyecto Laberinto26
+# No se requieren paquetes externos; usa solo la biblioteca estandar de Python
+
+# Para ejecutar las pruebas:
+# pytest pruebas/
