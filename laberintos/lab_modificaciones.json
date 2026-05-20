@@ -43,6 +43,6 @@
     "bichos": [
         { "modo": "Agresivo", "tipo": "normal",  "posicion": 2 },
         { "modo": "Dormido",  "tipo": "normal",  "posicion": 3 },
-        { "modo": "Agresivo", "tipo": "fuerte",  "posicion": 4 }
+        { "modo": "Agresivo", "tipo": "fuerte",  "posicion": 1 }
     ]
 }

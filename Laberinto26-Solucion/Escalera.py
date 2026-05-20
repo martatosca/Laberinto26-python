@@ -33,5 +33,8 @@ class Escalera(Hoja):
         return True
 
     def __str__(self):
-        dest = str(self.destino) if self.destino else "ninguno"
+        if self.destino:
+            return f"Escalera(destino={self.destino})"
+        num = getattr(self, '_destino_num', None)
+        dest = f"Hab-{num}" if num is not None else "ninguno"
         return f"Escalera(destino={dest})"

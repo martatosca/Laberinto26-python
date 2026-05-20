@@ -13,10 +13,10 @@ class BichoFuerte(Bicho):
     def __init__(self):
         super().__init__()
         self.vidas = 100   # el doble que un Bicho normal (50)
-        self.poder = 2     # el doble que un Bicho normal (1)
+        self.poder = 10    # hace 10 de daño por ataque
 
     def es_atacado_por(self, alguien):
-        print(f"¡{self} es un bicho fuerte! Tiene {self.vidas} vidas")
+        print(f"{self} es un bicho fuerte! Tiene {self.vidas} vidas")
         super().es_atacado_por(alguien)
 
     def __str__(self):

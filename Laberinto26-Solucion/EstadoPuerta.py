@@ -67,14 +67,14 @@ class Bloqueada(EstadoPuerta):
 
     def entrar(self, alguien, puerta):
         if hasattr(alguien, 'inventario') and any(item.es_llave() for item in alguien.inventario):
-            print(f"¡{alguien} usa la llave para desbloquear {puerta}!")
+            print(f"{alguien} usa la llave para desbloquear {puerta}!")
             # Consume la llave del inventario
             llave = next(item for item in alguien.inventario if item.es_llave())
             alguien.inventario.remove(llave)
             self.desbloquear(puerta)
             puerta.puede_entrar(alguien)
         else:
-            print(f"¡{puerta} está bloqueada! Necesitas una llave para pasar.")
+            print(f"{puerta} esta bloqueada. Necesitas una llave para pasar.")
 
     def esta_bloqueada(self):
         return True
