@@ -71,6 +71,9 @@ class LaberintoBuilder:
 
     def fabricar_agresivo(self): return Agresivo()
     def fabricar_perezoso(self): return Perezoso()
+    def fabricar_dormido(self):
+        from Dormido import Dormido
+        return Dormido()
 
     # ------------------------------------------------------------------
     # Metodos del Builder
@@ -108,6 +111,32 @@ class LaberintoBuilder:
         contenedor.agregar_hijo(bomba)
         return bomba
 
+    def fabricar_trampa_en(self, contenedor, danio=10):
+        """Crea una trampa y la agrega como hijo del contenedor."""
+        from Trampa import Trampa
+        trampa = Trampa(danio)
+        contenedor.agregar_hijo(trampa)
+        return trampa
+
+    def fabricar_escalera_en(self, contenedor, destino_num=None):
+        """Crea una escalera y la agrega como hijo del contenedor."""
+        from Escalera import Escalera
+        escalera = Escalera()
+        if destino_num is not None:
+            escalera._destino_num = destino_num
+        contenedor.agregar_hijo(escalera)
+        return escalera
+
+    def fabricar_pared_transparente_en(self, hab_num, or_nombre, descripcion='nada especial'):
+        """Reemplaza la pared en la orientacion dada por una ParedTransparente."""
+        from ParedTransparente import ParedTransparente
+        pt = ParedTransparente()
+        pt.descripcion_otro_lado = descripcion
+        hab = self._laberinto.obtener_habitacion(hab_num)
+        or_obj = self._map_orientacion(or_nombre)
+        hab.poner_en(or_obj, pt)
+        return pt
+
     def fabricar_armario(self, num: int, contenedor):
         """Crea un armario, lo rodea de paredes, anade una puerta al contenedor."""
         armario = Armario(num)
@@ -121,11 +150,15 @@ class LaberintoBuilder:
         contenedor.agregar_hijo(armario)
         return armario
 
-    def fabricar_bicho_modo(self, str_modo: str, posicion: int):
+    def fabricar_bicho_modo(self, str_modo: str, posicion: int, tipo: str = 'normal'):
         """Crea un bicho con el modo dado y lo coloca en la habitacion indicada."""
         modo = self._map_modo(str_modo)
         hab = self._juego.obtener_habitacion(posicion)
-        bicho = Bicho()
+        if tipo == 'fuerte':
+            from BichoFuerte import BichoFuerte
+            bicho = BichoFuerte()
+        else:
+            bicho = Bicho()
         bicho.modo = modo
         hab.entrar(bicho)
         self._juego.agregar_bicho(bicho)
@@ -174,6 +207,8 @@ class LaberintoBuilder:
             return self.fabricar_agresivo()
         elif nombre == 'Perezoso':
             return self.fabricar_perezoso()
+        elif nombre == 'Dormido':
+            return self.fabricar_dormido()
         raise ValueError(f"Modo desconocido: {nombre}")
 
     def __str__(self):

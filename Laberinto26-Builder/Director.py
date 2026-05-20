@@ -35,6 +35,7 @@ class Director:
         self.leer_archivo(archivo)
         self.ini_builder()
         self.fabricar_laberinto()
+        self.fabricar_paredes_transparentes()
         self.fabricar_juego()
         self.fabricar_bichos()
 
@@ -68,12 +69,21 @@ class Director:
     def fabricar_juego(self):
         self._builder.fabricar_juego()
 
+    def fabricar_paredes_transparentes(self):
+        pt_data = self._dict.get('pared_transparente', [])
+        for pt_info in pt_data:
+            hab_num = pt_info.get('habitacion')
+            or_nombre = pt_info.get('orientacion')
+            descripcion = pt_info.get('descripcion', 'nada especial')
+            self._builder.fabricar_pared_transparente_en(hab_num, or_nombre, descripcion)
+
     def fabricar_bichos(self):
         bichos_data = self._dict.get('bichos', [])
         for bicho_data in bichos_data:
             modo = bicho_data.get('modo', 'Agresivo')
             posicion = bicho_data.get('posicion', 1)
-            self._builder.fabricar_bicho_modo(modo, posicion)
+            tipo = bicho_data.get('tipo', 'normal')
+            self._builder.fabricar_bicho_modo(modo, posicion, tipo)
 
     # ------------------------------------------------------------------
     # Helpers
@@ -100,75 +110,18 @@ class Director:
                 self._builder.fabricar_tunel_en(padre)
             return
 
+        elif tipo == 'trampa':
+            if padre is not None:
+                self._builder.fabricar_trampa_en(padre, dic.get('danio', 10))
+            return
+
+        elif tipo == 'escalera':
+            if padre is not None:
+                self._builder.fabricar_escalera_en(padre, dic.get('destino'))
+            return
+
         for hijo in dic.get('hijos', []):
             self._fabricar_recursivo(hijo, contenedor)
 
-    def __str__(self):
-        return f"Director con builder={self._builder}"
-
-
-        
-        if forma == 'poligono4':
-            self._builder = LaberintoBuilder()
-        else:
-            self._builder = LaberintoBuilder()
-    
-    
-    def fabricarLaberinto(self):
-        
-        self._builder.fabricarLaberinto()
-        
-        laberinto_data = self._dict.get('laberinto', [])
-        for elem in laberinto_data:
-            self.fabricarLaberintoRecursivo(elem, None)
-        
-        puertas_data = self._dict.get('puertas', [])
-        for puerta in puertas_data:
-            self._builder.fabricarPuertaLado1Or1Lado2Or2(
-                puerta[0], puerta[1], puerta[2], puerta[3]
-            )
-    
-    def fabricarLaberintoRecursivo(self, dic: dict, padre):
-        
-        tipo = dic.get('tipo', '')
-        contenedor = None
-        
-        if tipo == 'habitacion':
-            contenedor = self._builder.fabricarHabitacion(dic.get('num', 0))
-        
-        elif tipo == 'armario':
-            if padre:
-                contenedor = self._builder.fabricarArmario(dic.get('num', 0), padre)
-        
-        elif tipo == 'bomba':
-            if padre:
-                self._builder.fabricarBombaEn(padre)
-            return
-        
-        hijos = dic.get('hijos', [])
-        for hijo in hijos:
-            self.fabricarLaberintoRecursivo(hijo, contenedor)
-    
-    
-    def fabricarJuego(self):
-        
-        self._juego = Juego()
-        self._juego.laberinto = self._builder.obtenerLaberinto()
-        
-        self._builder.juego = self._juego
-    
-    
-    def fabricarBichos(self):
-        
-        bichos_data = self._dict.get('bichos', [])
-        
-        if not bichos_data:
-            return
-        
-        for bicho_data in bichos_data:
-            modo = bicho_data.get('modo', 'Agresivo')
-            posicion = bicho_data.get('posicion', 1)
-            self._builder.fabricarBichoModo(modo, posicion)
-    
     def __str__(self):
         return f"Director con builder={self._builder}"
