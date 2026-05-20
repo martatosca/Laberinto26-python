@@ -88,9 +88,13 @@ class LaberintoBuilder:
         self._laberinto.agregar_habitacion(hab)
         return hab
 
-    def fabricar_puerta_lado1_or1_lado2_or2(self, num1, or1, num2, or2):
+    def fabricar_puerta_lado1_or1_lado2_or2(self, num1, or1, num2, or2, tipo='normal'):
         """Crea una puerta entre dos habitaciones según sus orientaciones."""
-        pt = self.fabricar_puerta()
+        if tipo == 'bloqueada':
+            from PuertaSalida import PuertaSalida
+            pt = PuertaSalida()
+        else:
+            pt = self.fabricar_puerta()
         lado1 = self._laberinto.obtener_habitacion(num1)
         lado2 = self._laberinto.obtener_habitacion(num2)
         pt.lado1 = lado1
@@ -126,6 +130,23 @@ class LaberintoBuilder:
             escalera._destino_num = destino_num
         contenedor.agregar_hijo(escalera)
         return escalera
+
+    def fabricar_llave_en(self, contenedor):
+        """Crea una llave y la agrega como hijo del contenedor."""
+        from Llave import Llave
+        llave = Llave()
+        contenedor.agregar_hijo(llave)
+        return llave
+
+    def fabricar_habitacion_salida(self, num: int):
+        """Crea una HabitacionSalida, la rodea de paredes y la agrega al laberinto."""
+        from HabitacionSalida import HabitacionSalida
+        hab = HabitacionSalida(num)
+        hab.forma = self.fabricar_forma()
+        for or_ in hab.forma.orientaciones:
+            hab.poner_en(or_, self.fabricar_pared())
+        self._laberinto.agregar_habitacion(hab)
+        return hab
 
     def fabricar_pared_transparente_en(self, hab_num, or_nombre, descripcion='nada especial'):
         """Reemplaza la pared en la orientacion dada por una ParedTransparente."""

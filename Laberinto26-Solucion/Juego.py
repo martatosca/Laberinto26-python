@@ -1,4 +1,5 @@
 # Juego: clase principal del juego del laberinto
+# Actualizado con condiciones de fin de juego
 import threading
 import copy
 
@@ -11,41 +12,33 @@ from Orientaciones import Norte, Sur, Este, Oeste
 
 
 class Juego:
-    """Juego es la clase principal del juego del laberinto.
-
-    Gestiona el laberinto, el personaje, los bichos y sus hilos
-    de ejecucion. Implementa el patron Factory Method para que
-    subclases (p. ej. JuegoBombas) puedan variar los elementos creados.
-    """
+    """Juego es la clase principal del juego del laberinto."""
 
     def __init__(self):
         self.laberinto = None
-        self.bichos = []          # lista de Bicho
-        self.person = None        # el Personaje
-        self.hilos = {}           # bicho -> Thread
-        self.prototipo = None     # copia prototipo del laberinto (para clonar)
+        self.bichos = []
+        self.person = None
+        self.hilos = {}
+        self.prototipo = None
+        self.terminado = False    # NUEVO: flag de fin de juego
 
     # -----------------------------------------------------------------------
     # Acciones sobre el laberinto
     # -----------------------------------------------------------------------
 
     def abrir_puertas(self):
-        """Abre todas las puertas del laberinto."""
         self.laberinto.recorrer(
             lambda each: each.abrir() if each.es_puerta() else None)
 
     def cerrar_puertas(self):
-        """Cierra todas las puertas del laberinto."""
         self.laberinto.recorrer(
             lambda each: each.cerrar() if each.es_puerta() else None)
 
     def activar_bombas(self):
-        """Activa todas las bombas del laberinto."""
         self.laberinto.recorrer(
             lambda each: each.activar() if each.es_bomba() else None)
 
     def desactivar_bombas(self):
-        """Desactiva todas las bombas del laberinto."""
         self.laberinto.recorrer(
             lambda each: each.desactivar() if each.es_bomba() else None)
 
@@ -54,7 +47,6 @@ class Juego:
     # -----------------------------------------------------------------------
 
     def agregar_personaje(self, nombre):
-        """Crea el personaje, lo asocia al juego y lo coloca en hab-1."""
         self.person = Personaje()
         self.person.nombre = nombre
         self.person.juego = self
@@ -73,11 +65,10 @@ class Juego:
             self.bichos.remove(bicho)
 
     def lanzar_bicho(self, bicho):
-        """Lanza el bicho en un hilo independiente."""
         print(f"{bicho} se activa")
 
         def _run():
-            while bicho.esta_vivo():
+            while bicho.esta_vivo() and not self.terminado:
                 bicho.actua()
 
         proceso = threading.Thread(target=_run, daemon=True)
@@ -85,7 +76,7 @@ class Juego:
         proceso.start()
 
     def lanzar_todos_los_bichos(self):
-        print("Los bichos despiertan")
+        print("Los bichos despiertan...")
         for bicho in self.bichos:
             self.lanzar_bicho(bicho)
 
@@ -94,7 +85,6 @@ class Juego:
         print(f"{bicho} muere")
 
     def terminar_todos_los_bichos(self):
-        print("Los bichos terminan")
         for bicho in self.bichos:
             self.terminar_bicho(bicho)
 
@@ -103,14 +93,12 @@ class Juego:
     # -----------------------------------------------------------------------
 
     def buscar_bicho(self):
-        """Devuelve un bicho vivo en la misma posicion que el personaje, o None."""
         for bicho in self.bichos:
             if bicho.esta_vivo() and bicho.posicion == self.person.posicion:
                 return bicho
         return None
 
     def buscar_personaje(self, bicho):
-        """Devuelve el personaje si esta en la misma posicion que el bicho, o None."""
         if bicho.posicion == self.person.posicion:
             return self.person
         return None
@@ -118,21 +106,41 @@ class Juego:
     def muere_bicho(self, bicho):
         self.terminar_bicho(bicho)
         if self.todos_muertos():
-            print(f"Fin juego. Gana {self.person}")
+            print(f"\n¡Todos los bichos han muerto! Pero aún necesitas encontrar la salida...")
 
     def muere_personaje(self):
-        print("Manmatao. Fin del juego")
+        """CONDICION DE DERROTA: el personaje pierde todas sus vidas."""
+        if self.terminado:
+            return
+        self.terminado = True
+        print("\n" + "="*50)
+        print("  ¡Has sido derrotado! Fin del juego.")
+        print("  El personaje ha perdido todas sus vidas.")
+        print("="*50 + "\n")
+        self.terminar_todos_los_bichos()
+
+    def gana_personaje(self):
+        """CONDICION DE VICTORIA: el personaje llega a la salida con la llave."""
+        if self.terminado:
+            return
+        self.terminado = True
+        print("\n" + "="*50)
+        print(f"  ¡¡¡{self.person} ha GANADO el juego!!!")
+        print("  Has encontrado la llave y escapado del laberinto.")
+        print("="*50 + "\n")
         self.terminar_todos_los_bichos()
 
     def todos_muertos(self):
         return not any(b.esta_vivo() for b in self.bichos)
 
+    def esta_terminado(self):
+        return self.terminado
+
     # -----------------------------------------------------------------------
-    # Prototipo (Prototype pattern)
+    # Prototipo
     # -----------------------------------------------------------------------
 
     def clonar(self):
-        """Devuelve una copia profunda del laberinto prototipo."""
         return copy.deepcopy(self.prototipo)
 
     # -----------------------------------------------------------------------
@@ -146,7 +154,7 @@ class Juego:
         return self.laberinto.obtener_habitacion(num)
 
     # -----------------------------------------------------------------------
-    # Factory Methods (subclases pueden redefinir para crear variantes)
+    # Factory Methods
     # -----------------------------------------------------------------------
 
     def fabricar_norte(self):   return Norte()
@@ -186,11 +194,10 @@ class Juego:
         contenedor.agregar_orientacion(self.fabricar_oeste())
 
     # -----------------------------------------------------------------------
-    # Construccion manual de laberintos (metodos heredados de Pharo)
+    # Construccion de laberintos
     # -----------------------------------------------------------------------
 
     def fabricar_lab2hab_fm(self):
-        """Construye un laberinto de 2 habitaciones con Factory Methods."""
         hab1 = self.fabricar_habitacion(1)
         hab2 = self.fabricar_habitacion(2)
         puerta = self.fabricar_puerta_lado1_lado2(hab1, hab2)
@@ -201,7 +208,6 @@ class Juego:
         self.laberinto.agregar_habitacion(hab2)
 
     def fabricar_lab4hab_fm(self):
-        """Construye un laberinto de 4 habitaciones con Factory Methods."""
         hab1 = self.fabricar_habitacion(1)
         hab2 = self.fabricar_habitacion(2)
         hab3 = self.fabricar_habitacion(3)
@@ -223,7 +229,6 @@ class Juego:
             self.laberinto.agregar_habitacion(h)
 
     def fabricar_lab4hab2bm_fm(self):
-        """Construye un laberinto de 4 habitaciones con 2 bombas."""
         from Bomba import Bomba
         self.fabricar_lab4hab_fm()
         bm1 = Bomba()

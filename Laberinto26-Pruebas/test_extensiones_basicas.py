@@ -19,7 +19,7 @@ from Dormido import Dormido
 from BichoFuerte import BichoFuerte
 from Orientaciones import Sur
 
-_RUTA = os.path.join(_ROOT, 'laberintos', 'lab_extensiones_basicas.json')
+_RUTA = os.path.join(_ROOT, 'laberintos', 'lab_modificaciones.json')
 
 
 class ExtensionesBasicasTest(unittest.TestCase):

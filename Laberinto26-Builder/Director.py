@@ -63,8 +63,9 @@ class Director:
 
         puertas_data = self._dict.get('puertas', [])
         for puerta in puertas_data:
+            tipo_puerta = puerta[4] if len(puerta) > 4 else 'normal'
             self._builder.fabricar_puerta_lado1_or1_lado2_or2(
-                puerta[0], puerta[1], puerta[2], puerta[3])
+                puerta[0], puerta[1], puerta[2], puerta[3], tipo_puerta)
 
     def fabricar_juego(self):
         self._builder.fabricar_juego()
@@ -96,6 +97,9 @@ class Director:
         if tipo == 'habitacion':
             contenedor = self._builder.fabricar_habitacion(dic.get('num', 0))
 
+        elif tipo == 'habitacion_salida':
+            contenedor = self._builder.fabricar_habitacion_salida(dic.get('num', 0))
+
         elif tipo == 'armario':
             if padre is not None:
                 contenedor = self._builder.fabricar_armario(dic.get('num', 0), padre)
@@ -118,6 +122,11 @@ class Director:
         elif tipo == 'escalera':
             if padre is not None:
                 self._builder.fabricar_escalera_en(padre, dic.get('destino'))
+            return
+
+        elif tipo == 'llave':
+            if padre is not None:
+                self._builder.fabricar_llave_en(padre)
             return
 
         for hijo in dic.get('hijos', []):

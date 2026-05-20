@@ -39,5 +39,9 @@ class ElementoMapa(ABC):
     def es_escalera(self):          return False
     def es_pared_transparente(self): return False
 
+    # --- Consultas tipo (extensiones medias) ---
+    def es_llave(self):             return False
+    def es_puerta_salida(self):     return False
+
     def __str__(self):
         return self.__class__.__name__

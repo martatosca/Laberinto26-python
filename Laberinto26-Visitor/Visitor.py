@@ -16,3 +16,6 @@ class Visitor:
     def visitar_trampa(self, trampa):               pass
     def visitar_escalera(self, escalera):           pass
     def visitar_pared_transparente(self, pared):    pass
+
+    # --- Extensiones medias ---
+    def visitar_llave(self, llave):                 pass
