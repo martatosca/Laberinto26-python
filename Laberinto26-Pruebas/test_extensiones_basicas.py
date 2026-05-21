@@ -120,15 +120,27 @@ class ExtensionesBasicasTest(unittest.TestCase):
     # Extension 5: BichoFuerte
     # ------------------------------------------------------------------
 
-    def test_bicho_fuerte_en_habitacion4(self):
-        """El bicho de hab4 debe ser BichoFuerte con vidas=100 y poder=2."""
-        hab4 = self.juego.obtener_habitacion(4)
+    def test_bicho_fuerte_en_habitacion1(self):
+        """El bicho de hab1 debe ser BichoFuerte con vidas=100 y poder=10."""
+        hab1 = self.juego.obtener_habitacion(1)
         bicho_fuerte = next(
-            (b for b in self.juego.bichos if b.posicion is hab4), None)
-        self.assertIsNotNone(bicho_fuerte, "No se encontro bicho en hab4")
+            (b for b in self.juego.bichos if b.posicion is hab1), None)
+        self.assertIsNotNone(bicho_fuerte, "No se encontro bicho en hab1")
         self.assertIsInstance(bicho_fuerte, BichoFuerte)
         self.assertEqual(bicho_fuerte.vidas, 100)
-        self.assertEqual(bicho_fuerte.poder, 2)
+        self.assertEqual(bicho_fuerte.poder, 10)
+
+    def test_bicho_fuerte_hace_danio_de_10(self):
+        """Un ataque de BichoFuerte debe quitar 10 vidas al personaje."""
+        hab1 = self.juego.obtener_habitacion(1)
+        bicho_fuerte = next(
+            (b for b in self.juego.bichos if b.posicion is hab1), None)
+        self.assertIsNotNone(bicho_fuerte)
+        person = self.juego.person
+        vidas_antes = person.vidas
+        person.es_atacado_por(bicho_fuerte)
+        self.assertEqual(person.vidas, vidas_antes - bicho_fuerte.poder)
+        self.assertEqual(person.vidas, vidas_antes - 10)
 
 
 if __name__ == '__main__':
